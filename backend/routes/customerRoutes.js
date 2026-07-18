@@ -1,5 +1,4 @@
 const express = require("express");
-
 const router = express.Router();
 
 const {
@@ -9,9 +8,42 @@ const {
   deleteCustomer,
 } = require("../controllers/customerController");
 
-router.post("/", createCustomer);
-router.get("/", getCustomers);
-router.put("/:id", updateCustomer);
-router.delete("/:id", deleteCustomer);
+const {
+  protect,
+  authorize,
+} = require("../middleware/authMiddleware");
+
+const validateCustomer = require("../validators/customerValidator");
+
+// Create Customer (Logged-in users)
+router.post(
+  "/",
+  protect,
+  validateCustomer,
+  createCustomer
+);
+
+// Get All Customers (Logged-in users)
+router.get(
+  "/",
+  protect,
+  getCustomers
+);
+
+// Update Customer (Logged-in users)
+router.put(
+  "/:id",
+  protect,
+  validateCustomer,
+  updateCustomer
+);
+
+// Delete Customer (Admin only)
+router.delete(
+  "/:id",
+  protect,
+  authorize("admin"),
+  deleteCustomer
+);
 
 module.exports = router;

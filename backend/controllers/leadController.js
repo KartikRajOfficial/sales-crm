@@ -19,12 +19,54 @@ const createLead = async (req, res) => {
 // Get All Leads
 const getLeads = async (req, res) => {
   try {
-    const leads = await Lead.find().populate(
-      "assignedTo",
-      "name email role"
-    );
+    const {
+      search,
+      status,
+      page = 1,
+      limit = 10,
+      sort = "-createdAt",
+    } = req.query;
 
-    res.status(200).json(leads);
+    let filter = {};
+
+    if (status) {
+      filter.status = status;
+    }
+
+    if (search) {
+      filter.$or = [
+        {
+          companyName: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          contactPerson: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+
+    const total = await Lead.countDocuments(filter);
+
+    const leads = await Lead.find(filter)
+      .sort(sort)
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum);
+
+    res.status(200).json({
+      page: pageNum,
+      limit: limitNum,
+      total,
+      totalPages: Math.ceil(total / limitNum),
+      leads,
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,

@@ -19,16 +19,63 @@ const createCustomer = async (req, res) => {
 // Get All Customers
 const getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find();
+    const {
+      search,
+      page = 1,
+      limit = 10,
+      sort = "-createdAt",
+    } = req.query;
 
-    res.status(200).json(customers);
+    let filter = {};
+
+    if (search) {
+      filter = {
+        $or: [
+          {
+            companyName: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+          {
+            contactPerson: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+          {
+            email: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+        ],
+      };
+    }
+
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+
+    const total = await Customer.countDocuments(filter);
+
+    const customers = await Customer.find(filter)
+      .sort(sort)
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum);
+
+    res.status(200).json({
+      page: pageNum,
+      limit: limitNum,
+      total,
+      totalPages: Math.ceil(total / limitNum),
+      customers,
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,
     });
   }
 };
-
 // Update Customer
 const updateCustomer = async (req, res) => {
   try {
