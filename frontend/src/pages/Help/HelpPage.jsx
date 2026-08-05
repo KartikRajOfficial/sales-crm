@@ -129,7 +129,7 @@ const HelpPage = () => {
 
   return (
     <div>
-      <PageHeader icon={HelpCircle} title="Help & Guide" subtitle="Everything you need to get the most out of NexusCRM" />
+      <PageHeader icon={HelpCircle} title="Help & Guide" subtitle="Everything you need to get the most out of SalesCRM" />
 
       {/* Hero + search */}
       <motion.div

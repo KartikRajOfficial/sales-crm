@@ -23,6 +23,8 @@ const LeadsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [sortKey, setSortKey] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [loading, setLoading] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -36,11 +38,13 @@ const LeadsPage = () => {
   const fetchLeads = async () => {
     try {
       setLoading(true);
+      const sortParam = `${sortOrder === 'asc' ? '' : '-'}${sortKey}`;
       const res = await leadService.getLeads({
         page: currentPage,
         limit: 10,
         search: debouncedSearch,
         status: statusFilter === 'All' ? '' : statusFilter,
+        sort: sortParam,
       });
       // Backend responds with { leads, total, totalPages, page, limit }
       setLeads(res.leads || []);
@@ -61,7 +65,7 @@ const LeadsPage = () => {
   useEffect(() => {
     fetchLeads();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, debouncedSearch, statusFilter]);
+  }, [currentPage, debouncedSearch, statusFilter, sortKey, sortOrder]);
 
   const openModal = (lead = null) => {
     setSelectedLead(lead);
@@ -121,6 +125,7 @@ const LeadsPage = () => {
     {
       key: 'companyName',
       label: 'Company',
+      sortable: true,
       render: (val, row) => (
         <div>
           <p className="font-medium text-white">{val}</p>
@@ -131,6 +136,7 @@ const LeadsPage = () => {
     {
       key: 'email',
       label: 'Contact',
+      sortable: true,
       render: (val, row) => (
         <div className="space-y-0.5">
           {val && <p className="flex items-center gap-1.5 text-gray-300"><Mail size={12} className="text-gray-500" />{val}</p>}
@@ -142,6 +148,7 @@ const LeadsPage = () => {
     {
       key: 'status',
       label: 'Status',
+      sortable: true,
       render: (val) => <Badge variant={LEAD_STATUS_COLORS[val] || 'default'}>{val}</Badge>,
     },
     {
@@ -181,7 +188,24 @@ const LeadsPage = () => {
         </div>
       </div>
 
-      <DataTable columns={columns} data={leads} loading={loading} emptyIcon={Users} emptyMessage="No leads yet" emptyDescription="Add your first lead or adjust your search to see results here." />
+      <DataTable
+        columns={columns}
+        data={leads}
+        loading={loading}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        onSortChange={(key) => {
+          if (key === sortKey) {
+            setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+          } else {
+            setSortKey(key);
+            setSortOrder('asc');
+          }
+        }}
+        emptyIcon={Users}
+        emptyMessage="No leads yet"
+        emptyDescription="Add your first lead or adjust your search to see results here."
+      />
 
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} total={total} pageSize={10} />
 

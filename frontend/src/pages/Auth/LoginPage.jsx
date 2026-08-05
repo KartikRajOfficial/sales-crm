@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import AuthShell from '../../components/layout/AuthShell';
@@ -13,13 +13,14 @@ const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
     try {
       setLoading(true);
       // AuthContext.login expects a single credentials object.
       await login({ email: data.email, password: data.password });
-      toast.success('Welcome back!');
+      toast.success('Welcome back to SalesCRM!');
       navigate('/dashboard');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Invalid email or password');
@@ -37,15 +38,31 @@ const LoginPage = () => {
           type="email"
           placeholder="you@company.com"
           autoComplete="email"
-          {...register('email', { required: 'Email is required' })}
+          {...register('email', { 
+            required: 'Email is required',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Invalid email address'
+            }
+          })}
           error={errors.email?.message}
         />
         <Input
           label="Password"
           icon={<Lock size={18} />}
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           placeholder="••••••••"
           autoComplete="current-password"
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-gray-400 hover:text-white transition-colors focus:outline-none"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          }
           {...register('password', { required: 'Password is required' })}
           error={errors.password?.message}
         />

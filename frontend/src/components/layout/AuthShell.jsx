@@ -32,7 +32,7 @@ const AuthShell = ({ heading, subheading, children }) => {
             </div>
           </div>
           <span className="text-xl font-bold text-white font-display">
-            Nexus<span className="gradient-text">CRM</span>
+            Sales<span className="gradient-text">CRM</span>
           </span>
         </motion.div>
 
@@ -78,7 +78,7 @@ const AuthShell = ({ heading, subheading, children }) => {
           </div>
         </div>
 
-        <p className="text-xs text-gray-600">© {new Date().getFullYear()} NexusCRM. Crafted for modern sales teams.</p>
+        <p className="text-xs text-gray-600">© {new Date().getFullYear()} SalesCRM. Crafted for modern sales teams.</p>
       </div>
 
       {/* Form panel */}
@@ -95,7 +95,7 @@ const AuthShell = ({ heading, subheading, children }) => {
               <Zap className="text-white" size={18} fill="currentColor" />
             </div>
             <span className="text-lg font-bold text-white font-display">
-              Nexus<span className="gradient-text">CRM</span>
+              Sales<span className="gradient-text">CRM</span>
             </span>
           </div>
 

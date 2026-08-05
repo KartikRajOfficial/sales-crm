@@ -27,6 +27,8 @@ const OpportunitiesPage = () => {
   const [stageFilter, setStageFilter] = useState('All');
   const [minValue, setMinValue] = useState('');
   const [maxValue, setMaxValue] = useState('');
+  const [sortKey, setSortKey] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [loading, setLoading] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -43,12 +45,14 @@ const OpportunitiesPage = () => {
   const fetchOpportunities = async () => {
     try {
       setLoading(true);
+      const sortParam = `${sortOrder === 'asc' ? '' : '-'}${sortKey}`;
       const res = await opportunityService.getOpportunities({
         page: currentPage,
         limit: 10,
         stage: stageFilter === 'All' ? '' : stageFilter,
         minValue: debouncedMin || '',
         maxValue: debouncedMax || '',
+        sort: sortParam,
       });
       // Backend responds with { opportunities, total, totalPages, page, limit }
       setOpportunities(res.opportunities || []);
@@ -79,7 +83,7 @@ const OpportunitiesPage = () => {
   useEffect(() => {
     fetchOpportunities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, stageFilter, debouncedMin, debouncedMax]);
+  }, [currentPage, stageFilter, debouncedMin, debouncedMax, sortKey, sortOrder]);
 
   useEffect(() => {
     fetchCustomersForDropdown();
@@ -154,9 +158,9 @@ const OpportunitiesPage = () => {
         </div>
       ),
     },
-    { key: 'value', label: 'Value', render: (val) => <span className="font-semibold text-white tabular-nums">{formatCurrency(val)}</span> },
-    { key: 'stage', label: 'Stage', render: (val) => <Badge variant={OPPORTUNITY_STAGE_COLORS[val] || 'default'}>{val}</Badge> },
-    { key: 'expectedCloseDate', label: 'Expected Close', render: (val) => <span className="text-gray-400">{formatDate(val)}</span> },
+    { key: 'value', label: 'Value', sortable: true, render: (val) => <span className="font-semibold text-white tabular-nums">{formatCurrency(val)}</span> },
+    { key: 'stage', label: 'Stage', sortable: true, render: (val) => <Badge variant={OPPORTUNITY_STAGE_COLORS[val] || 'default'}>{val}</Badge> },
+    { key: 'expectedCloseDate', label: 'Expected Close', sortable: true, render: (val) => <span className="text-gray-400">{formatDate(val)}</span> },
     {
       key: 'actions',
       label: '',
@@ -206,7 +210,24 @@ const OpportunitiesPage = () => {
         </div>
       </div>
 
-      <DataTable columns={columns} data={opportunities} loading={loading} emptyIcon={TrendingUp} emptyMessage="No opportunities yet" emptyDescription="Create your first deal or adjust your filters to see results here." />
+      <DataTable
+        columns={columns}
+        data={opportunities}
+        loading={loading}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        onSortChange={(key) => {
+          if (key === sortKey) {
+            setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+          } else {
+            setSortKey(key);
+            setSortOrder('asc');
+          }
+        }}
+        emptyIcon={TrendingUp}
+        emptyMessage="No opportunities yet"
+        emptyDescription="Create your first deal or adjust your filters to see results here."
+      />
 
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} total={total} pageSize={10} />
 

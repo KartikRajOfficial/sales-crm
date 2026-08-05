@@ -7,6 +7,8 @@ import DashboardPage from '../pages/Dashboard/DashboardPage';
 import LeadsPage from '../pages/Leads/LeadsPage';
 import CustomersPage from '../pages/Customers/CustomersPage';
 import OpportunitiesPage from '../pages/Opportunities/OpportunitiesPage';
+import SettingsPage from '../pages/Settings/SettingsPage';
+import HelpPage from '../pages/Help/HelpPage';
 
 const AppRoutes = () => {
   return (
@@ -23,6 +25,8 @@ const AppRoutes = () => {
             <Route path="/leads" element={<LeadsPage />} />
             <Route path="/customers" element={<CustomersPage />} />
             <Route path="/opportunities" element={<OpportunitiesPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/help" element={<HelpPage />} />
           </Route>
         </Route>
 

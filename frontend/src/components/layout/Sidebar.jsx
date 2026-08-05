@@ -9,6 +9,7 @@ import {
   Building2,
   TrendingUp,
   HelpCircle,
+  Settings,
   ChevronsLeft,
   ChevronsRight,
   LogOut,
@@ -21,6 +22,7 @@ const navLinks = [
   { path: '/leads', label: 'Leads', icon: Users },
   { path: '/customers', label: 'Customers', icon: Building2 },
   { path: '/opportunities', label: 'Opportunities', icon: TrendingUp },
+  { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
 // Secondary links (support / reference).
@@ -107,10 +109,10 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, onToggleCollapse }) => {
               className="ml-3 overflow-hidden"
             >
               <span className="block text-lg font-bold text-white font-display leading-none whitespace-nowrap">
-                Nexus<span className="gradient-text">CRM</span>
+                Sales<span className="gradient-text">CRM</span>
               </span>
-              <span className="block text-[10px] text-gray-500 font-medium tracking-wide mt-1 whitespace-nowrap">
-                SALES WORKSPACE
+              <span className="block text-[10px] text-gray-500 font-medium tracking-wide mt-1 whitespace-nowrap uppercase">
+                Smart Sales Platform
               </span>
             </motion.div>
           )}

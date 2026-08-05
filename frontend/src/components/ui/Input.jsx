@@ -4,7 +4,7 @@ import React, { forwardRef } from 'react';
  * Input — labelled text field with optional leading icon.
  * `icon` is a rendered element (e.g. <Mail size={18} />), not a component.
  */
-const Input = forwardRef(({ label, error, icon, hint, type = 'text', className = '', ...rest }, ref) => {
+const Input = forwardRef(({ label, error, icon, rightIcon, hint, type = 'text', className = '', ...rest }, ref) => {
   return (
     <div className="w-full flex flex-col">
       {label && (
@@ -20,10 +20,15 @@ const Input = forwardRef(({ label, error, icon, hint, type = 'text', className =
           ref={ref}
           type={type}
           className={`w-full bg-white/[0.04] border border-white/10 rounded-xl py-2.5 text-white placeholder:text-gray-500 focus:bg-white/[0.06] focus:border-violet-500/70 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all duration-200 ${
-            icon ? 'pl-11 pr-4' : 'px-4'
-          } ${error ? 'border-red-500/60 focus:border-red-500 focus:ring-red-500/20' : ''} ${className}`}
+            icon ? 'pl-11' : 'px-4'
+          } ${rightIcon ? 'pr-11' : icon ? '' : 'pr-4'} ${error ? 'border-red-500/60 focus:border-red-500 focus:ring-red-500/20' : ''} ${className}`}
           {...rest}
         />
+        {rightIcon && (
+          <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-500 transition-colors">
+            {rightIcon}
+          </div>
+        )}
       </div>
       {error ? (
         <span className="text-xs text-red-400 mt-1.5">{error}</span>

@@ -20,6 +20,8 @@ const CustomersPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [sortKey, setSortKey] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [loading, setLoading] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,10 +35,12 @@ const CustomersPage = () => {
   const fetchCustomers = async () => {
     try {
       setLoading(true);
+      const sortParam = `${sortOrder === 'asc' ? '' : '-'}${sortKey}`;
       const res = await customerService.getCustomers({
         page: currentPage,
         limit: 10,
         search: debouncedSearch,
+        sort: sortParam,
       });
       // Backend responds with { customers, total, totalPages, page, limit }
       setCustomers(res.customers || []);
@@ -56,7 +60,7 @@ const CustomersPage = () => {
   useEffect(() => {
     fetchCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, debouncedSearch]);
+  }, [currentPage, debouncedSearch, sortKey, sortOrder]);
 
   const openModal = (customer = null) => {
     setSelectedCustomer(customer);
@@ -116,6 +120,7 @@ const CustomersPage = () => {
     {
       key: 'companyName',
       label: 'Company',
+      sortable: true,
       render: (val, row) => (
         <div>
           <p className="font-medium text-white">{val}</p>
@@ -126,6 +131,7 @@ const CustomersPage = () => {
     {
       key: 'email',
       label: 'Contact',
+      sortable: true,
       render: (val, row) => (
         <div className="space-y-0.5">
           {val && <p className="flex items-center gap-1.5 text-gray-300"><Mail size={12} className="text-gray-500" />{val}</p>}
@@ -137,6 +143,7 @@ const CustomersPage = () => {
     {
       key: 'industry',
       label: 'Industry',
+      sortable: true,
       render: (val) => (val ? <Badge variant={{ bg: 'bg-white/[0.06]', text: 'text-gray-300' }} dot={false}>{val}</Badge> : <span className="text-gray-600">—</span>),
     },
     {
@@ -168,7 +175,24 @@ const CustomersPage = () => {
         </div>
       </div>
 
-      <DataTable columns={columns} data={customers} loading={loading} emptyIcon={Building2} emptyMessage="No customers yet" emptyDescription="Add your first customer or adjust your search to see results here." />
+      <DataTable
+        columns={columns}
+        data={customers}
+        loading={loading}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        onSortChange={(key) => {
+          if (key === sortKey) {
+            setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+          } else {
+            setSortKey(key);
+            setSortOrder('asc');
+          }
+        }}
+        emptyIcon={Building2}
+        emptyMessage="No customers yet"
+        emptyDescription="Add your first customer or adjust your search to see results here."
+      />
 
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} total={total} pageSize={10} />
 

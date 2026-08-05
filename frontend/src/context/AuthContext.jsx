@@ -3,6 +3,16 @@ import { loginUser as loginAPI, registerUser as registerAPI } from '../services/
 
 const AuthContext = createContext(null);
 
+const isTokenExpired = (token) => {
+  if (!token) return true;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp ? payload.exp * 1000 < Date.now() : false;
+  } catch {
+    return true;
+  }
+};
+
 /**
  * AuthProvider manages authentication state across the app.
  * Provides user info, login/logout functions, and role checking.
@@ -15,9 +25,19 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
+
+    if (storedUser && storedToken && !isTokenExpired(storedToken)) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
+    } else {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
     }
+
     setLoading(false);
   }, []);
 

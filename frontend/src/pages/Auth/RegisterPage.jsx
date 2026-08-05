@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { User, Mail, Lock, ArrowRight } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import AuthShell from '../../components/layout/AuthShell';
@@ -14,6 +14,7 @@ const RegisterPage = () => {
   const { register: registerUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
     try {
@@ -52,9 +53,19 @@ const RegisterPage = () => {
         <Input
           label="Password"
           icon={<Lock size={18} />}
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           placeholder="At least 6 characters"
           autoComplete="new-password"
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-gray-400 hover:text-white transition-colors focus:outline-none"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          }
           {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Minimum 6 characters' } })}
           error={errors.password?.message}
           hint="Use 6 or more characters."

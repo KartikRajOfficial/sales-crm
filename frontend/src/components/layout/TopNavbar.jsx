@@ -9,12 +9,13 @@ const PAGE_META = {
   '/leads': { title: 'Leads', sub: 'Track and qualify new prospects' },
   '/customers': { title: 'Customers', sub: 'Your active accounts' },
   '/opportunities': { title: 'Opportunities', sub: 'Deals in your pipeline' },
-  '/help': { title: 'Help & Guide', sub: 'Learn how to use NexusCRM' },
+  '/settings': { title: 'Settings', sub: 'Manage account and preferences' },
+  '/help': { title: 'Help & Guide', sub: 'Learn how to use SalesCRM' },
 };
 
 const getMeta = (pathname) => {
   const key = Object.keys(PAGE_META).find((k) => pathname.startsWith(k));
-  return key ? PAGE_META[key] : { title: 'NexusCRM', sub: '' };
+  return key ? PAGE_META[key] : { title: 'SalesCRM', sub: '' };
 };
 
 const TopNavbar = ({ onMenuClick }) => {

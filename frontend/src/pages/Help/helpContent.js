@@ -24,13 +24,13 @@ export const helpSections = [
     id: 'getting-started',
     icon: Rocket,
     title: 'Getting Started',
-    summary: 'Create an account, sign in, and find your way around NexusCRM.',
+    summary: 'Create an account, sign in, and find your way around SalesCRM.',
     keywords: 'signup register login account role admin sales session logout jwt token',
     blocks: [
       {
         type: 'text',
         body:
-          'NexusCRM helps you move deals from first contact to closed-won. You capture prospects as Leads, promote the real accounts to Customers, then track the deals themselves as Opportunities. The Dashboard ties it all together with live totals and charts.',
+          'SalesCRM helps you move deals from first contact to closed-won. You capture prospects as Leads, promote the real accounts to Customers, then track the deals themselves as Opportunities. The Dashboard ties it all together with live totals and charts.',
       },
       {
         type: 'steps',

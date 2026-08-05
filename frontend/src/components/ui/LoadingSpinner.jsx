@@ -15,7 +15,7 @@ export const FullPageLoader = () => {
         <div className="absolute inset-0 blur-xl bg-violet-500/30 rounded-full" />
         <LoadingSpinner size="lg" className="relative" />
       </div>
-      <span className="mt-4 text-sm font-medium text-gray-400">Loading NexusCRM…</span>
+      <span className="mt-4 text-sm font-medium text-gray-400">Loading SalesCRM…</span>
     </div>
   );
 };
