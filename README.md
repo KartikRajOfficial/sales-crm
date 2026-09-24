@@ -352,7 +352,8 @@ Software Developer
 
 GitHub: https://github.com/KartikRajOfficial
 
-LinkedIn: *(Add your LinkedIn URL here)*
+LinkedIn: https://linkedin.com/in/KartikRajOfficial
+
 
 ---
 
